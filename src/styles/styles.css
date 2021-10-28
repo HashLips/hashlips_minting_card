@@ -1,17 +1,17 @@
 :root {
-  --button-bg: #8522c7;
-  --button-active-bg: #681d9b;
+  --button-bg: #ec780c;
+  --button-active-bg: #cc6505;
   --small-button-bg: #919191;
   --small-button-active-bg: #646464;
   --button-text: #ffffff;
   --card: #ffffff;
   --accountText: #ffffff;
-  --statusText: #470068;
-  --bg-gradient_1: rgb(162, 196, 240);
-  --bg-gradient_2: rgb(240, 162, 217);
-  --gradient_1: rgb(83, 152, 243);
-  --gradient_2: rgb(236, 71, 214);
-  --gradient_3: rgb(241, 204, 80);
+  --statusText: #5e2d00;
+  --bg-gradient_1: rgb(54, 54, 54);
+  --bg-gradient_2: rgb(226, 117, 67);
+  --gradient_1: rgb(243, 107, 83);
+  --gradient_2: rgb(66, 66, 66);
+  --gradient_3: rgb(83, 80, 241);
   --success: #24a13f;
   --warning: #ca5824;
   --error: #ca2f24;
@@ -82,7 +82,16 @@ body {
 
 .card_header_image {
   position: absolute;
-  width: 120%;
+  width: 100%;
+}
+
+.card_logo_image {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-radius: 100px;
+  top: 20px;
+  left: 20px;
 }
 
 .card_body {

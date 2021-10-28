@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Web3 from "web3";
 import contract from "../contracts/contract.json";
 import Hero from "../assets/hero.png";
+import Logo from "../assets/logo.png";
 
 const initialInfoState = {
   connected: false,
@@ -15,10 +16,11 @@ const initialInfoState = {
 
 const initialMintState = {
   loading: false,
-  status: `Mint your ${contract.name}`,
+  status: `Mint your ${contract.name} NFT`,
   amount: 1,
   supply: "0",
   cost: "0",
+  paused: 1,
 };
 
 function Minter() {
@@ -129,16 +131,43 @@ function Minter() {
     }
   };
 
+  const getPaused = async () => {
+    const params = {
+      to: info.contractJSON.address,
+      from: info.account,
+      data: info.contract.methods.paused().encodeABI(),
+    };
+    try {
+      const result = await window.ethereum.request({
+        method: "eth_call",
+        params: [params],
+      });
+      console.log(info.web3.utils.hexToNumber(result));
+      setMintInfo((prevState) => ({
+        ...prevState,
+        paused: info.web3.utils.hexToNumber(result),
+      }));
+    } catch (err) {
+      setMintInfo((prevState) => ({
+        ...prevState,
+        paused: 1,
+      }));
+    }
+  };
+
   const mint = async () => {
     const params = {
       to: info.contractJSON.address,
       from: info.account,
+      gas: String(
+        info.web3.utils.toHex(
+          contract.gas_limit + contract.gas_multiplier * mintInfo.amount
+        )
+      ),
       value: String(
         info.web3.utils.toHex(Number(mintInfo.cost) * mintInfo.amount)
       ),
-      data: info.contract.methods
-        .mint(info.account, mintInfo.amount)
-        .encodeABI(),
+      data: info.contract.methods.mint(mintInfo.amount).encodeABI(),
     };
     try {
       setMintInfo((prevState) => ({
@@ -156,7 +185,6 @@ function Minter() {
         status:
           "Nice! Your NFT will show up on Opensea, once the transaction is successful.",
       }));
-      getSupply();
     } catch (err) {
       setMintInfo((prevState) => ({
         ...prevState,
@@ -188,6 +216,7 @@ function Minter() {
     if (info.connected) {
       getSupply();
       getCost();
+      getPaused();
     }
   }, [info.connected]);
 
@@ -197,7 +226,18 @@ function Minter() {
         <div className="card_header colorGradient">
           <img className="card_header_image ns" alt={"banner"} src={Hero} />
         </div>
-        {mintInfo.supply < contract.total_supply ? (
+        {mintInfo.paused == 1 ? (
+          <div className="card_body">
+            {!info.connected ? (
+              <p className="statusText">{info.status}</p>
+            ) : (
+              <p style={{ color: "var(--statusText)", textAlign: "center" }}>
+                You can not mint yet. Please wait for the announcement to start
+                minting.
+              </p>
+            )}
+          </div>
+        ) : mintInfo.supply < contract.total_supply ? (
           <div className="card_body">
             <div
               style={{
@@ -230,11 +270,14 @@ function Minter() {
                 +
               </button>
             </div>
+
             {info.connected ? (
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <p style={{ color: "var(--statusText)", textAlign: "center" }}>
-                  {info.web3?.utils.fromWei(mintInfo.cost, "ether") *
-                    mintInfo.amount}{" "}
+                  {Number(
+                    info.web3?.utils.fromWei(mintInfo.cost, "ether") *
+                      mintInfo.amount
+                  ).toFixed(3)}{" "}
                   {contract.chain_symbol}
                 </p>
                 <div style={{ width: 20 }}></div>
@@ -247,9 +290,11 @@ function Minter() {
                 </p>
               </div>
             ) : null}
+
             {mintInfo.status ? (
               <p className="statusText">{mintInfo.status}</p>
             ) : null}
+
             {info.status ? (
               <p className="statusText" style={{ color: "var(--error)" }}>
                 {info.status}
@@ -262,7 +307,7 @@ function Minter() {
               {mintInfo.supply}/{contract.total_supply}
             </p>
             <p className="statusText">
-              We've sold out! .You can still buy and trade the {contract.name}{" "}
+              We've sold out!. You can still buy and trade the {contract.name}{" "}
               on marketplaces such as Opensea.
             </p>
           </div>
@@ -295,11 +340,12 @@ function Minter() {
           }}
           className="_90"
           target="_blank"
-          href="https://polygonscan.com/token/0x827acb09a2dc20e39c9aad7f7190d9bc53534192"
+          href={contract.scan}
         >
-          View Contract
+          {contract.symbol} Contract
         </a>
       </div>
+      <img className="card_logo_image ns" alt={"banner"} src={Logo} />
     </div>
   );
 }
