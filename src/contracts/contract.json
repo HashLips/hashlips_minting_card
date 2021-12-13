@@ -1,11 +1,14 @@
 {
-  "name": "Nerdy Coder Clones",
-  "symbol": "NCC",
-  "total_supply": 1000,
-  "chain_symbol": "MATIC",
-  "chain": "Polygon",
-  "chain_id": 137,
-  "address": "0x827acb09a2dc20e39c9aad7f7190d9bc53534192",
+  "name": "RuShroom(s)z",
+  "symbol": "RSRMZ",
+  "total_supply": 5000,
+  "chain_symbol": "ETH",
+  "chain": "Ethereum",
+  "chain_id": 1,
+  "address": "0x1483c67d318951ea7ffdc01c4aba798288e7835c",
+  "gas_limit": 120000,
+  "gas_multiplier": 120000,
+  "scan": "https://etherscan.io/token/0x1483c67d318951ea7ffdc01c4aba798288e7835c",
   "abi": [
     {
       "inputs": [
