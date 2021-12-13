@@ -92,7 +92,7 @@ function Minter() {
     try {
       const result = await window.ethereum.request({
         method: "eth_call",
-        params: [params],
+        params: [params, "latest"],
       });
       console.log(info.web3.utils.hexToNumberString(result));
       setMintInfo((prevState) => ({
@@ -116,7 +116,7 @@ function Minter() {
     try {
       const result = await window.ethereum.request({
         method: "eth_call",
-        params: [params],
+        params: [params, "latest"],
       });
       console.log(info.web3.utils.hexToNumberString(result));
       setMintInfo((prevState) => ({
@@ -140,7 +140,7 @@ function Minter() {
     try {
       const result = await window.ethereum.request({
         method: "eth_call",
-        params: [params],
+        params: [params, "latest"],
       });
       console.log(info.web3.utils.hexToNumber(result));
       setMintInfo((prevState) => ({
